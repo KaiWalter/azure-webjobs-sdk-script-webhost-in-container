@@ -1,21 +1,24 @@
-FROM microsoft/dotnet:2.0.0-sdk-nanoserver
-LABEL Description="Azure WebJobs SDK script WebHost" Vendor="myself" Version="1.0.0"
+FROM microsoft/aspnet:4.6.2
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-COPY App.zip C:/App.zip
+ADD https://github.com/Azure/azure-webjobs-sdk-script/releases/download/v1.0.11296/Functions.Private.1.0.11296.zip C:\\WebHost.zip
 
-COPY Host.zip C:/Host.zip
+RUN Expand-Archive C:\WebHost.zip ; Remove-Item WebHost.zip
 
-RUN powershell -Command Expand-Archive C:\App.zip
+RUN Import-Module WebAdministration; \
+    Set-ItemProperty 'IIS:\Sites\Default Web Site\' -name physicalPath -value 'C:\WebHost\SiteExtensions\Functions'; \
+    Set-ItemProperty 'IIS:\Sites\Default Web Site\' -name serverAutoStart -value 'true'; \
+    Set-ItemProperty 'IIS:\AppPools\DefaultAppPool\' -name autoStart -value 'true'
 
-RUN powershell -Command Expand-Archive C:\Host.zip
+COPY App.zip App.zip
 
-ENV AzureWebJobsScriptRoot='C:\App\publish'
-ENV ASPNETCORE_URLS='http://*:8080/'
+RUN Expand-Archive App.zip ; \
+    Remove-Item App.zip
 
-WORKDIR Host\\publish
+SHELL ["cmd", "/S", "/C"]
+ENV AzureWebJobsScriptRoot='C:\App'
 
-EXPOSE 8080
-CMD [ "dotnet","Microsoft.Azure.WebJobs.Script.WebHost.dll" ] 
+EXPOSE 80
 
-
+WORKDIR App
 
