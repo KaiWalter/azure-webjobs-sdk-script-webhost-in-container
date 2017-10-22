@@ -1,0 +1,3 @@
+HttpTrigger\function.json
+QueueForwarder\function.json
+QueueEnd\function.json
