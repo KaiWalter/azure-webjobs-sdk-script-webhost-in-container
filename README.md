@@ -14,6 +14,8 @@ To minimize shuffling around files in the image and to avoid creating a new IIS 
 ## prerequisites
 
 * Windows 10 or Windows 2016 with Container support
+* [docker package](https://blogs.technet.microsoft.com/canitpro/2016/10/26/step-by-step-setup-docker-on-your-windows-2016-server/)
+* NuGet installed locally
 
 ## build the Docker image
 
@@ -30,15 +32,6 @@ The other script build the Docker image and starts the container either interact
 ```
 .\buildAndRunDockerImage.ps1
 ```
-
-### Docker IIS issue
-When starting the container, a message is printed out several times
-
-> APPCMD failed with error code 4312
-> Applied configuration changes to section "system.applicationHost/applicationPools" for "MACHINE/WEBROOT/APPHOST" at configuration commit path "MACHINE/WEBROOT/APPHOST"
-> ERROR ( message:Cannot find requested collection element. )
-
-This is a known [issue](https://github.com/Microsoft/aspnet-docker/issues/35) but has no effect.
 
 ### Environment variables
 All environment variables required for the Functions host (e.g. Application Insights Instrumentation Key, connection strings for other resources) can be placed in the `hostvariables.env` file, when executing the container in Docker.

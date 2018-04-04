@@ -1,7 +1,7 @@
-FROM microsoft/aspnet:4.6.2
+FROM microsoft/aspnet:4.7.1
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-ADD https://github.com/Azure/azure-webjobs-sdk-script/releases/download/v1.0.11296/Functions.Private.1.0.11296.zip C:\\WebHost.zip
+ADD https://github.com/Azure/azure-functions-host/releases/download/1.0.11559/Functions.Private.1.0.11559.zip C:\\WebHost.zip
 
 RUN Expand-Archive C:\WebHost.zip ; Remove-Item WebHost.zip
 
